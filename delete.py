@@ -1,28 +1,28 @@
 import psycopg2
 from config import config
 
-def select_data():
+def delete_data(_id):
     command = (
         """
-            SELECT *
+            DELETE
             FROM table_one
+            WHERE _id = %s
         """
     )
 
     connection = None
+    rows_deleted = 0
 
     try:
         params = config()
         connection = psycopg2.connect(**params)
         cursor = connection.cursor()
 
-        cursor.execute(command)
+        cursor.execute(command, (_id,))
 
-        row = cursor.fetchone()
+        rows_deleted = cursor.rowcount
 
-        while row is not None:
-            print(row)
-            row = cursor.fetchone()
+        connection.commit()
 
         cursor.close()
     
@@ -33,4 +33,6 @@ def select_data():
         if connection is not None:
             connection.close()
 
-select_data()
+    return rows_deleted
+
+delete_data(15)
