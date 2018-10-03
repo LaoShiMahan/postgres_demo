@@ -1,16 +1,8 @@
 import psycopg2
 from config import config
+from commands import Command
 
-def insert_data(_name):
-    command = (
-        """
-            INSERT INTO table_one
-                (_name)
-            VALUES(%s)
-            RETURNING _id;
-        """
-    )
-
+def insert(_name):
     connection = None
     _id = None
 
@@ -19,7 +11,7 @@ def insert_data(_name):
         connection = psycopg2.connect(**params)
         cursor = connection.cursor()
 
-        cursor.execute(command, (_name,))
+        cursor.execute(Command.insert(), (_name,))
 
         _id = cursor.fetchone()[0]
 
@@ -36,18 +28,7 @@ def insert_data(_name):
 
     return _id
 
-# insert_data("Chutes and Ladders")
-
-def insert_data_list(data_list):
-    command = (
-        """
-            INSERT INTO table_one
-                (_name)
-            VALUES(%s)
-            RETURNING _id;
-        """
-    )
-
+def insert_list(data_list):
     connection = None
 
     try:
@@ -55,7 +36,7 @@ def insert_data_list(data_list):
         connection = psycopg2.connect(**params)
         cursor = connection.cursor()
 
-        cursor.executemany(command, data_list)
+        cursor.executemany(Command.insert_list(), data_list)
 
         connection.commit()
 
@@ -67,7 +48,3 @@ def insert_data_list(data_list):
     finally:
         if connection is not None:
             connection.close()
-
-data = [("Sorry",), ("Skyrim",), ("Starcraft",), ("Mariocart",), ("Warcraft",)]
-
-insert_data_list(data)

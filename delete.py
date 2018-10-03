@@ -1,15 +1,8 @@
 import psycopg2
 from config import config
+from commands import Command
 
-def delete_data(_id):
-    command = (
-        """
-            DELETE
-            FROM table_one
-            WHERE _id = %s
-        """
-    )
-
+def delete(_id):
     connection = None
     rows_deleted = 0
 
@@ -18,7 +11,7 @@ def delete_data(_id):
         connection = psycopg2.connect(**params)
         cursor = connection.cursor()
 
-        cursor.execute(command, (_id,))
+        cursor.execute(Command.delete(), (_id,))
 
         rows_deleted = cursor.rowcount
 
@@ -34,5 +27,3 @@ def delete_data(_id):
             connection.close()
 
     return rows_deleted
-
-delete_data(15)

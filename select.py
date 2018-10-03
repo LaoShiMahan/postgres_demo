@@ -1,14 +1,8 @@
 import psycopg2
 from config import config
+from commands import Command
 
-def select_data():
-    command = (
-        """
-            SELECT *
-            FROM table_one
-        """
-    )
-
+def select():
     connection = None
 
     try:
@@ -16,7 +10,7 @@ def select_data():
         connection = psycopg2.connect(**params)
         cursor = connection.cursor()
 
-        cursor.execute(command)
+        cursor.execute(Command.select())
 
         row = cursor.fetchone()
 
@@ -32,5 +26,3 @@ def select_data():
     finally:
         if connection is not None:
             connection.close()
-
-select_data()

@@ -1,15 +1,7 @@
 import psycopg2
 from config import config
 
-def update_data(_id, _name):
-    command = (
-        """
-            UPDATE table_one
-            SET _name = %s
-            WHERE _id = %s
-        """
-    )
-
+def update(_id, _name):
     connection = None
     updated_rows = 0
 
@@ -18,7 +10,7 @@ def update_data(_id, _name):
         connection = psycopg2.connect(**params)
         cursor = connection.cursor()
 
-        cursor.execute(command, (_name, _id))
+        cursor.execute(Command.update, (_name, _id))
 
         updated_rows = cursor.rowcount
 
@@ -34,5 +26,3 @@ def update_data(_id, _name):
             connection.close()
 
     return updated_rows
-
-update_data(19, "World of Warcraft")
